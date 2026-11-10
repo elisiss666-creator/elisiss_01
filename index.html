@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#12224f" />
+    <meta
+      name="description"
+      content="橘貓站長的九九快打：80 秒內找出正確乘法答案的九關反應遊戲。"
+    />
+    <title>橘貓站長的九九快打</title>
+    <link rel="icon" href="assets/orange-cat-master.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <section id="title-screen" class="screen title-screen active" aria-labelledby="game-title">
+        <div class="title-backdrop" aria-hidden="true"></div>
+        <div class="title-content">
+          <div class="title-copy">
+            <p class="eyebrow">九九乘法 × 反應挑戰</p>
+            <div class="title-ticket">
+              <span class="title-ticket__mini">橘貓站長的</span>
+              <h1 id="game-title">九九快打</h1>
+            </div>
+            <p class="title-lead">搭上乘法列車，80 秒答對 10 題！</p>
+            <div class="title-actions">
+              <button id="start-button" class="primary-button big-button" type="button">
+                <span aria-hidden="true">▶</span> 開始遊戲
+              </button>
+              <button id="title-help-button" class="secondary-button" type="button">
+                遊戲說明
+              </button>
+            </div>
+            <p class="title-note">支援滑鼠、觸控與鍵盤數字鍵 1～9</p>
+          </div>
+          <div class="title-mascot-wrap" aria-hidden="true">
+            <div class="speech-sticker">準備發車！</div>
+            <img
+              class="title-mascot"
+              src="assets/orange-cat-tutorial.png"
+              alt=""
+              draggable="false"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="map-screen" class="screen map-screen" aria-labelledby="map-title" hidden>
+        <header class="topbar map-topbar">
+          <div>
+            <p class="topbar-kicker">乘法鐵路</p>
+            <h2 id="map-title">選擇關卡</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="map-help-button" class="icon-button" type="button" aria-label="遊戲說明">?</button>
+            <button id="map-sound-button" class="icon-button sound-button" type="button" aria-label="關閉音效">🔊</button>
+            <button id="reset-button" class="text-button" type="button">重設進度</button>
+          </div>
+        </header>
+
+        <div class="map-layout">
+          <div id="map-board" class="map-board" aria-label="九關乘法鐵路地圖">
+            <img src="assets/world-map-bg.png" alt="九個車站相連的乘法鐵路地圖" draggable="false" />
+            <div id="level-buttons" class="level-buttons"></div>
+          </div>
+          <aside id="level-card" class="level-card" aria-live="polite">
+            <div class="level-card__badge" id="level-card-number">1</div>
+            <div>
+              <p class="level-card__eyebrow">目前選擇</p>
+              <h3 id="level-card-name">紅旗起點站</h3>
+              <p id="level-card-tables">練習 2、5 的乘法</p>
+            </div>
+            <div id="level-card-stars" class="level-card__stars" aria-label="尚未取得星星">☆☆☆</div>
+            <button id="enter-level-button" class="primary-button" type="button">進入關卡</button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="game-screen" class="screen game-screen" aria-labelledby="question-text" hidden>
+        <div class="game-backdrop" aria-hidden="true"></div>
+        <header class="game-hud">
+          <div class="hud-chip timer-chip">
+            <span class="hud-icon" aria-hidden="true">⏱</span>
+            <span id="timer-value" class="hud-value">80</span>
+            <span class="hud-label">秒</span>
+          </div>
+          <div class="hud-chip progress-chip">
+            <span class="hud-label">答對</span>
+            <span id="score-value" class="hud-value">0</span>
+            <span class="hud-divider">/</span>
+            <span class="hud-value hud-value--small">10</span>
+          </div>
+          <div id="hearts" class="hud-chip hearts-chip" aria-label="還有五顆愛心"></div>
+          <div class="hud-spacer"></div>
+          <div class="level-pill">
+            <span id="game-level-number">第 1 關</span>
+            <strong id="game-level-name">紅旗起點站</strong>
+          </div>
+          <button id="game-sound-button" class="icon-button sound-button" type="button" aria-label="關閉音效">🔊</button>
+          <button id="pause-button" class="icon-button" type="button" aria-label="暫停遊戲">Ⅱ</button>
+        </header>
+
+        <div class="game-content">
+          <div id="question-card" class="question-card">
+            <span class="question-label">請找出正確答案</span>
+            <h2 id="question-text">7 × 8 = ？</h2>
+          </div>
+
+          <div id="holes-grid" class="holes-grid" aria-label="九個洞口"></div>
+          <div id="feedback" class="feedback" aria-live="assertive"></div>
+        </div>
+      </section>
+
+      <div id="tutorial-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+        <div class="dialog tutorial-dialog">
+          <img src="assets/orange-cat-tutorial.png" alt="橘貓站長指向遊戲說明" draggable="false" />
+          <div class="dialog-copy">
+            <p class="dialog-kicker">站長廣播</p>
+            <h2 id="tutorial-title">乘法列車要發車囉！</h2>
+            <ol class="tutorial-steps">
+              <li><span>1</span><p>先看上方的乘法題目。</p></li>
+              <li><span>2</span><p>敲拿著正確答案牌的橘貓站長。</p></li>
+              <li><span>3</span><p>80 秒內答對 10 題就過關。</p></li>
+              <li><span>4</span><p>敲錯會少一顆愛心，五顆用完就回地圖。</p></li>
+            </ol>
+            <p class="keyboard-tip">PC 也可以按鍵盤 1～9，位置依照九宮格排列。</p>
+            <div class="dialog-actions">
+              <button id="tutorial-close-button" class="primary-button" type="button">我知道了</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="pause-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title">
+        <div class="dialog compact-dialog">
+          <div class="dialog-icon" aria-hidden="true">⏸</div>
+          <h2 id="pause-title">遊戲暫停</h2>
+          <p>倒數已暫停，準備好再繼續。</p>
+          <div class="dialog-actions stacked-actions">
+            <button id="resume-button" class="primary-button" type="button">繼續遊戲</button>
+            <button id="quit-button" class="secondary-button" type="button">退出並回主地圖</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="result-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="result-title">
+        <div id="result-dialog" class="dialog result-dialog">
+          <img id="result-cat" src="assets/orange-cat-master.png" alt="橘貓站長" draggable="false" />
+          <div class="dialog-copy">
+            <p id="result-kicker" class="dialog-kicker">列車到站</p>
+            <h2 id="result-title">挑戰成功！</h2>
+            <div id="result-stars" class="result-stars" aria-label="獲得三顆星">★★★</div>
+            <p id="result-message">下一站已經開放。</p>
+            <div id="result-stats" class="result-stats"></div>
+            <div class="dialog-actions">
+              <button id="result-map-button" class="primary-button" type="button">回主地圖</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="confirm-overlay" class="overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <div class="dialog compact-dialog">
+          <div class="dialog-icon" aria-hidden="true">↻</div>
+          <h2 id="confirm-title">重設全部進度？</h2>
+          <p>已解鎖的關卡和星星紀錄都會清除。</p>
+          <div class="dialog-actions">
+            <button id="confirm-reset-button" class="danger-button" type="button">確定重設</button>
+            <button id="cancel-reset-button" class="secondary-button" type="button">取消</button>
+          </div>
+        </div>
+      </div>
+
+      <img id="hammer-cursor" class="hammer-cursor" src="assets/toy-hammer.png" alt="" aria-hidden="true" draggable="false" />
+      <div id="toast" class="toast" aria-live="polite"></div>
+      <div class="rotate-hint" role="status">
+        <span aria-hidden="true">↻</span>
+        <strong>請將裝置轉為橫向</strong>
+        <small>橫向畫面比較容易敲到正確答案。</small>
+      </div>
+    </div>
+
+    <noscript>這個遊戲需要啟用 JavaScript 才能遊玩。</noscript>
+    <script src="game.js" defer></script>
+  </body>
+</html>
